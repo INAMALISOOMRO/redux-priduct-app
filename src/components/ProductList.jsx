@@ -4,7 +4,7 @@ import { fetchProducts } from '../features/products/productSlice'
 
 const ProductList = () => {
   const dispatch = useDispatch()
-  const { items, status } = useSelector((state) => state.products)
+  const { items, status, error } = useSelector((state) => state.products)
 
   useEffect(() => {
     if (status === 'idle') {
@@ -12,7 +12,11 @@ const ProductList = () => {
     }
   }, [status, dispatch])
 
-  if (status === 'loading') return <h2>Loading...</h2>
+  // ✅ Handle idle (before fetch fires)
+  if (status === 'idle' || status === 'loading') return <h2>Loading...</h2>
+
+  // ✅ Handle failed fetch
+  if (status === 'failed') return <h2>Error: {error}</h2>
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
